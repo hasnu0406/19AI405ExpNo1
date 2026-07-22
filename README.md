@@ -44,62 +44,42 @@
 ## PROGRAM:
 ```Python
 import random
-class MedicinePrescribingAgent:
+class MedicineAgent:
     def __init__(self):
-        self.location = "A"
-        self.temperature = {
-            "A": round(random.uniform(97.0, 102.0), 1),
-            "B": round(random.uniform(97.0, 102.0), 1)
-        }
+        self.location = "Room A"
         self.performance = 0
-    def move_left(self):
-        if self.location == "B":
-            self.location = "A"
-    def move_right(self):
-        if self.location == "A":
-            self.location = "B"
-    def prescribe_medicine(self):
-        if self.temperature[self.location] > 98.5:
-            print(f"Patient in Room {self.location} has fever ({self.temperature[self.location]}°F).")
-            print("Medicine Prescribed.")
-            self.temperature[self.location] = 98.5
-             self.move_left()
-            self.performance -= 1
-        elif action == "right":
-            self.move_right()
-            self.performance -= 1
-        elif action == "prescribe":
-            self.prescribe_medicine()
-        elif action == "nothing":
-            pass
+    def act(self,environment):
+        temp=environment[self.location]["temperature"]
+        if temp > 98.5:
+            print(f"Patient in {self.location} unhealthy ({temp:.1f}°F). Giving medicine.")
+            self.performance+=10
+            environment[self.location]["temperature"]=98.0
         else:
-            print("Invalid action")
-    def print_status(self):
-        print("----------------------------------------")
-        print(f"Current Room      : {self.location}")
-        print(f"Room Temperatures : {self.temperature}")
-        print(f"Performance       : {self.performance}")
-        print("----------------------------------------")
-agent = MedicinePrescribingAgent()
-agent.print_status()
-agent.perform_action("prescribe")
-agent.print_status()
-agent.perform_action("right")
-agent.print_status()
-agent.perform_action("prescribe")
-agent.print_status()
-agent.perform_action("left")
-agent.print_status()
-agent.perform_action("nothing")
-agent.print_status()           self.performance += 10
-        else:
-            print(f"Patient in Room {self.location} is healthy ({self.temperature[self.location]}°F).")
-            print("No medicine required.")
-    def perform_action(self, action):
-        if action == "left":
+            print(f"Patient in {self.location} healthy ({temp:.1f}°F).")
+        self.location="Room B" if self.location == "Room A" else "Room A"
+        self.performance-=1
+        print(f"Moving to {self.location}. Performance: {self.performance}")
+        print("-"*30)
+def main():
+    environment={
+        "Room A": {"temperature": random.uniform(97.0,102.0)},
+        "Room B": {"temperature": random.uniform(97.0,102.0)}
+    }
+    agent = MedicineAgent()
+    print("Starting simulation.")
+    print("-"*30)
+    for step in range(5):
+        print(f"---Step {step+1}---")
+        agent.act(environment)
+        random_room=random.choice(["Room A","Room B"])
+        environment[random_room]["temperature"]=random.uniform(99.0,103.0)
+    print("Simulation finished")
+if __name__=="__main__":
+    main()
 
 ```
 
 ## OUTPUT:
 
-<img width="386" height="349" alt="image" src="https://github.com/user-attachments/assets/3a5ab0de-20b7-4431-924a-aa0ac4d0f476" />
+<img width="379" height="239" alt="image" src="https://github.com/user-attachments/assets/4f8293f2-7c53-4914-bad1-a22f2eb47005" />
+
