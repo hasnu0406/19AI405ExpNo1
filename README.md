@@ -44,68 +44,62 @@
 ## PROGRAM:
 ```Python
 import random
-
-class VacuumCleanerAgent:
-    def __init__(self):  # Initialize the agent's state (location and dirt status)
-        self.location = "A"  # Initial location (can be "A" or "B")
-        self.dirt_status = {
-            "A": True,
-            "B": True,
-        }  # Initial dirt status (False means no dirt)
+class MedicinePrescribingAgent:
+    def __init__(self):
+        self.location = "A"
+        self.temperature = {
+            "A": round(random.uniform(97.0, 102.0), 1),
+            "B": round(random.uniform(97.0, 102.0), 1)
+        }
         self.performance = 0
-
-    def move_left(self):  # Move the agent to the left if possible
+    def move_left(self):
         if self.location == "B":
             self.location = "A"
-
-    def move_right(self):  # Move the agent to the right if possible
+    def move_right(self):
         if self.location == "A":
             self.location = "B"
-
-    def suck_dirt(self):  # Suck dirt in the current location if there is dirt
-        if self.dirt_status[self.location]:
-            self.dirt_status[self.location] = False
-            print(f"Sucked dirt in location {self.location}")
-
-    def do_nothing(self):  # Do nothing
-        pass
-
-    def perform_action(self, action):  # Perform the specified action
-        if action == "left":
-            self.performance = self.performance - 1
-            self.move_left()
+    def prescribe_medicine(self):
+        if self.temperature[self.location] > 98.5:
+            print(f"Patient in Room {self.location} has fever ({self.temperature[self.location]}°F).")
+            print("Medicine Prescribed.")
+            self.temperature[self.location] = 98.5
+             self.move_left()
+            self.performance -= 1
         elif action == "right":
-            self.performance = self.performance - 1
             self.move_right()
-        elif action == "suck":
-            self.performance = self.performance + 10
-            self.suck_dirt()
+            self.performance -= 1
+        elif action == "prescribe":
+            self.prescribe_medicine()
         elif action == "nothing":
-            self.do_nothing()
+            pass
         else:
             print("Invalid action")
-
-    def print_status(self):  # Print the current status of the agent
-        print(f"Location: {self.location}, Dirt Status: {self.dirt_status}, ", end="")
-        print(f"Perfomance Measure: {self.performance}")
-
-
-# Example usage:
-agent = VacuumCleanerAgent()
-# Move the agent, suck dirt, and do nothing
-agent.perform_action("left")
+    def print_status(self):
+        print("----------------------------------------")
+        print(f"Current Room      : {self.location}")
+        print(f"Room Temperatures : {self.temperature}")
+        print(f"Performance       : {self.performance}")
+        print("----------------------------------------")
+agent = MedicinePrescribingAgent()
 agent.print_status()
-agent.perform_action("suck")
+agent.perform_action("prescribe")
 agent.print_status()
 agent.perform_action("right")
 agent.print_status()
-agent.perform_action("suck")
+agent.perform_action("prescribe")
+agent.print_status()
+agent.perform_action("left")
 agent.print_status()
 agent.perform_action("nothing")
-agent.print_status()
+agent.print_status()           self.performance += 10
+        else:
+            print(f"Patient in Room {self.location} is healthy ({self.temperature[self.location]}°F).")
+            print("No medicine required.")
+    def perform_action(self, action):
+        if action == "left":
+
 ```
 
 ## OUTPUT:
 
-<img width="612" height="105" alt="image" src="https://github.com/user-attachments/assets/3bc4d3b1-b741-4231-b086-da5988835bca" />
-
+<img width="386" height="349" alt="image" src="https://github.com/user-attachments/assets/3a5ab0de-20b7-4431-924a-aa0ac4d0f476" />
